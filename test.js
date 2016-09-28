@@ -114,3 +114,27 @@ test('start', function (t) {
     })
   })
 })
+
+test('end', function (t) {
+  t.plan(4)
+
+  var core = hypercore(level())
+  var feed = core.createFeed()
+
+  feed.append('foo', function (err) {
+    t.error(err)
+    feed.append('bar', function (err) {
+      t.error(err)
+
+      index(feed, {
+        live: false,
+        end: 1
+      }, function (entry, cb) {
+        t.equal(entry.toString(), 'foo')
+        cb()
+      }, function (err) {
+        t.error(err)
+      })
+    })
+  })
+})
