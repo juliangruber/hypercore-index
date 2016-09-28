@@ -63,7 +63,7 @@ test('default key', function (t) {
       cb()
     }, function (err) {
       t.error(err)
-      feed._db.get('!index!' + feed.key.toString('hex'), function (err) {
+      feed._db.get('!index!' + feed.key.toString('hex') + '!default', function (err) {
         t.error(err)
         t.end()
       })
@@ -84,7 +84,7 @@ test('custom key', function (t) {
       cb()
     }, function (err) {
       t.error(err)
-      feed._db.get('!index!foobar', function (err) {
+      feed._db.get('!index!' + feed.key.toString('hex') + '!foobar', function (err) {
         t.error(err)
         t.end()
       })
