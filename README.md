@@ -4,6 +4,8 @@
 Linear asynchronous stateful indexing of a
 [hypercore](https://github.com/mafintosh/hypercore) feed.
 
+[![build status](https://travis-ci.org/juliangruber/hypercore-index.svg?branch=master)](http://travis-ci.org/juliangruber/hypercore-index)
+
 Traverses a hypercore feed in chronologic order and lets you consume each
 entry via some asynchronous function. Remembers where you left inside the
 feed's db and continues there on later runs.
