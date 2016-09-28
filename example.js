@@ -10,18 +10,18 @@ var feed = core.createFeed()
 
 fs.createReadStream(__filename)
 .pipe(feed.createWriteStream())
-.on('finish', () => {
-  test(() => test())
+.on('finish', function () {
+  test(test)
 })
 
-var test = next => {
+var test = function (next) {
   console.log('INDEX')
   index(feed, {
     live: false
-  }, (entry, cb) => {
+  }, function (entry, cb) {
     console.log('entry', entry.toString())
     cb()
-  }, err => {
+  }, function (err) {
     if (err) throw err
     console.log('Done!')
     if (next) next()
