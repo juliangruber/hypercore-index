@@ -50,3 +50,44 @@ test('live', function (t) {
   feed.append('foo')
   feed.append('bar')
 })
+
+test('default key', function (t) {
+  var core = hypercore(level())
+  var feed = core.createFeed()
+
+  feed.append('foo', function (err) {
+    t.error(err)
+    index(feed, {
+      live: false
+    }, function (entry, cb) {
+      cb()
+    }, function (err) {
+      t.error(err)
+      feed._db.get('!index!' + feed.key.toString('hex'), function (err) {
+        t.error(err)
+        t.end()
+      })
+    })
+  })
+})
+
+test('custom key', function (t) {
+  var core = hypercore(level())
+  var feed = core.createFeed()
+
+  feed.append('foo', function (err) {
+    t.error(err)
+    index(feed, {
+      live: false,
+      key: 'foobar'
+    }, function (entry, cb) {
+      cb()
+    }, function (err) {
+      t.error(err)
+      feed._db.get('!index!foobar', function (err) {
+        t.error(err)
+        t.end()
+      })
+    })
+  })
+})
