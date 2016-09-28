@@ -1,8 +1,8 @@
 'use strict'
 
-const each = require('stream-each')
+var each = require('stream-each')
 
-const noop = () => {}
+var noop = () => {}
 
 module.exports = (feed, opts, onentry, ondone) => {
   if (typeof opts === 'function') {
@@ -11,7 +11,7 @@ module.exports = (feed, opts, onentry, ondone) => {
     opts = {}
   }
   ondone = ondone || noop
-  const key = '!index!' + (opts.key || feed.key.toString('hex'))
+  var key = '!index!' + (opts.key || feed.key.toString('hex'))
 
   if (typeof opts.start !== 'undefined') {
     onstart(opts.start)
@@ -23,9 +23,9 @@ module.exports = (feed, opts, onentry, ondone) => {
     })
   }
 
-  const onstart = (start) => {
-    let offset = start
-    const rs = feed.createReadStream({
+  var onstart = (start) => {
+    var offset = start
+    var rs = feed.createReadStream({
       start: start,
       end: opts.end,
       live: typeof opts.live !== 'undefined'

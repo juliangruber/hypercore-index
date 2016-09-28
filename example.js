@@ -1,12 +1,12 @@
 'use strict'
 
-const hypercore = require('hypercore')
-const level = require('memdb')
-const fs = require('fs')
-const index = require('.')
+var hypercore = require('hypercore')
+var level = require('memdb')
+var fs = require('fs')
+var index = require('.')
 
-const core = hypercore(level('/tmp/hypercore-index'))
-const feed = core.createFeed()
+var core = hypercore(level('/tmp/hypercore-index'))
+var feed = core.createFeed()
 
 fs.createReadStream(__filename)
 .pipe(feed.createWriteStream())
@@ -14,7 +14,7 @@ fs.createReadStream(__filename)
   test(() => test())
 })
 
-const test = next => {
+var test = next => {
   console.log('INDEX')
   index(feed, {
     live: false
