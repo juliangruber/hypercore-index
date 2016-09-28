@@ -11,7 +11,7 @@ module.exports = (feed, opts, onentry, ondone) => {
     opts = {}
   }
   ondone = ondone || noop
-  const key = opts.key || feed.key.toString('hex')
+  const key = "!index!" + (opts.key || feed.key.toString('hex'))
 
   if (typeof opts.start !== 'undefined') {
     onstart(opts.start)
