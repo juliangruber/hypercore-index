@@ -9,20 +9,25 @@ var test = require('tap').test
 test('index', function (t) {
   t.plan(3)
 
-  var core = hypercore(level())
+  var db = level()
+  var core = hypercore(db)
   var feed = core.createFeed()
 
   fs.createReadStream(__filename)
   .pipe(feed.createWriteStream())
   .on('finish', function () {
-    index(feed, {
+    index({
+      feed: feed,
+      db: db,
       live: false
     }, function (entry, cb) {
       t.ok(entry)
       cb()
     }, function (err) {
       t.error(err)
-      index(feed, {
+      index({
+        feed: feed,
+        db: db,
         live: false
       }, function (entry, cb) {
         t.fail('Did not resume')
@@ -36,10 +41,14 @@ test('index', function (t) {
 test('live', function (t) {
   t.plan(2)
 
-  var core = hypercore(level())
+  var db = level()
+  var core = hypercore(db)
   var feed = core.createFeed()
 
-  index(feed, function (entry, cb) {
+  index({
+    feed: feed,
+    db: db
+  }, function (entry, cb) {
     t.ok(entry)
     cb()
   }, function (err) {
@@ -51,49 +60,9 @@ test('live', function (t) {
   feed.append('bar')
 })
 
-test('default key', function (t) {
-  var core = hypercore(level())
-  var feed = core.createFeed()
-
-  feed.append('foo', function (err) {
-    t.error(err)
-    index(feed, {
-      live: false
-    }, function (entry, cb) {
-      cb()
-    }, function (err) {
-      t.error(err)
-      feed._db.get('!index!' + feed.key.toString('hex') + '!default', function (err) {
-        t.error(err)
-        t.end()
-      })
-    })
-  })
-})
-
-test('custom key', function (t) {
-  var core = hypercore(level())
-  var feed = core.createFeed()
-
-  feed.append('foo', function (err) {
-    t.error(err)
-    index(feed, {
-      live: false,
-      key: 'foobar'
-    }, function (entry, cb) {
-      cb()
-    }, function (err) {
-      t.error(err)
-      feed._db.get('!index!' + feed.key.toString('hex') + '!foobar', function (err) {
-        t.error(err)
-        t.end()
-      })
-    })
-  })
-})
-
 test('start', function (t) {
-  var core = hypercore(level())
+  var db = level()
+  var core = hypercore(db)
   var feed = core.createFeed()
 
   feed.append('foo', function (err) {
@@ -101,7 +70,9 @@ test('start', function (t) {
     feed.append('bar', function (err) {
       t.error(err)
 
-      index(feed, {
+      index({
+        feed: feed,
+        db: db,
         live: false,
         start: 1
       }, function (entry, cb) {
@@ -118,7 +89,8 @@ test('start', function (t) {
 test('end', function (t) {
   t.plan(4)
 
-  var core = hypercore(level())
+  var db = level()
+  var core = hypercore(db)
   var feed = core.createFeed()
 
   feed.append('foo', function (err) {
@@ -126,7 +98,9 @@ test('end', function (t) {
     feed.append('bar', function (err) {
       t.error(err)
 
-      index(feed, {
+      index({
+        feed: feed,
+        db: db,
         live: false,
         end: 1
       }, function (entry, cb) {

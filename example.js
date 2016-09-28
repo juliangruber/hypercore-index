@@ -5,7 +5,8 @@ var level = require('memdb')
 var fs = require('fs')
 var index = require('./')
 
-var core = hypercore(level('/tmp/hypercore-index'))
+var db = level('/tmp/hypercore-index')
+var core = hypercore(db)
 var feed = core.createFeed()
 
 fs.createReadStream(__filename)
@@ -16,7 +17,9 @@ fs.createReadStream(__filename)
 
 var test = function (next) {
   console.log('INDEX')
-  index(feed, {
+  index({
+    feed: feed,
+    db: db,
     live: false
   }, function (entry, cb) {
     console.log('entry', entry.toString())
