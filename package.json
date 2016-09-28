@@ -1,6 +1,6 @@
 {
   "name": "hypercore-index",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "license": "MIT",
   "repository": "juliangruber/hypercore-index",
   "description": "Linear asynchronous stateful indexing of a hypercore feed",
