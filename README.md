@@ -19,7 +19,10 @@ const index = require('hypercore-index')
 const core = hypercore(db)
 const feed = core.createFeed()
 
-index(feed, function onentry (entry, next) {
+index({
+  feed: feed,
+  db: db
+}, function onentry (entry, next) {
   console.log('entry', entry.toString())
   next()
 }, function ondone (err) {
@@ -36,14 +39,14 @@ $ npm install hypercore-index
 
 ## API
 
-### index(feed, [opts], onentry, [ondone])
+### index(opts, onentry, [ondone])
 
 Options:
 
+- `feed`: The hypercore feed. Required.
+- `db`: A level db. Required.
 - `start`: The first index. Default: `0`
 - `end`: The last index. Default: `Infinity`
-- `key`: The key under which to store the last processed index in the db.
-Default: `feed.key`
 - `live`: Whether to keep scanning. Default: `true`, unless you pass `opts.end`
 
 ## license
