@@ -7,10 +7,10 @@
   "devDependencies": {
     "hypercore": "^4.10.0",
     "memdb": "^1.3.1",
-    "standard": "^7.1.2"
+    "standard": "^8.2.0"
   },
   "scripts": {
-    "test": "standard"
+    "test": "node example.js && standard"
   },
   "dependencies": {
     "stream-each": "^1.1.2"
