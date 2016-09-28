@@ -91,3 +91,26 @@ test('custom key', function (t) {
     })
   })
 })
+
+test('start', function (t) {
+  var core = hypercore(level())
+  var feed = core.createFeed()
+
+  feed.append('foo', function (err) {
+    t.error(err)
+    feed.append('bar', function (err) {
+      t.error(err)
+
+      index(feed, {
+        live: false,
+        start: 1
+      }, function (entry, cb) {
+        t.equal(entry.toString(), 'bar')
+        cb()
+      }, function (err) {
+        t.error(err)
+        t.end()
+      })
+    })
+  })
+})

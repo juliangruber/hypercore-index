@@ -23,7 +23,7 @@ module.exports = function (feed, opts, onentry, ondone) {
     })
   }
 
-  var onstart = function (start) {
+  function onstart (start) {
     var offset = start
     var rs = feed.createReadStream({
       start: start,
