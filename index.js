@@ -1,6 +1,6 @@
 'use strict'
 
-const Writable = require('stream').Writable
+const each = require('stream-each')
 
 const noop = () => {}
 
@@ -32,17 +32,11 @@ module.exports = (feed, opts, onentry, ondone) => {
         ? opts.live
         : typeof end === 'undefined'
     })
-    rs.on('error', ondone)
-    const ws = Writable({
-      write (buf, _, done) {
-        onentry(buf, err => {
-          if (err) return done(err)
-          feed._db.put(key, ++offset, done)
-        })
-      }
-    })
-    ws.on('error', ondone)
-    ws.on('finish', ondone)
-    rs.pipe(ws)
+    each(rs, (buf, done) => {
+      onentry(buf, err => {
+        if (err) return done(err)
+        feed._db.put(key, ++offset, done)
+      })
+    }, ondone)
   }
 }

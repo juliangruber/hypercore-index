@@ -11,5 +11,8 @@
   },
   "scripts": {
     "test": "standard"
+  },
+  "dependencies": {
+    "stream-each": "^1.1.2"
   }
 }
