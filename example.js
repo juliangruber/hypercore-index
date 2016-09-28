@@ -3,7 +3,7 @@
 var hypercore = require('hypercore')
 var level = require('memdb')
 var fs = require('fs')
-var index = require('.')
+var index = require('./')
 
 var core = hypercore(level('/tmp/hypercore-index'))
 var feed = core.createFeed()
