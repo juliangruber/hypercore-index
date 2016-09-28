@@ -32,3 +32,21 @@ test('index', function (t) {
     })
   })
 })
+
+test('live', function (t) {
+  t.plan(2)
+
+  var core = hypercore(level())
+  var feed = core.createFeed()
+
+  index(feed, function (entry, cb) {
+    t.ok(entry)
+    cb()
+  }, function (err) {
+    t.error(err)
+    t.fail()
+  })
+
+  feed.append('foo')
+  feed.append('bar')
+})
