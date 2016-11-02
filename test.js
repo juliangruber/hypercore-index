@@ -112,3 +112,54 @@ test('end', function (t) {
     })
   })
 })
+
+test('append', function (t) {
+  var db = level()
+  var core = hypercore(db)
+  var feed = core.createFeed()
+  var indexed = null
+
+  var append = index({
+    feed: feed,
+    db: db
+  }, function (entry, cb) {
+    setTimeout(function () {
+      indexed = entry
+      cb()
+    }, 100)
+  })
+
+  append(new Buffer('hello'), function (err) {
+    t.error(err)
+    t.same(indexed, new Buffer('hello'), 'callback after index')
+    t.end()
+  })
+})
+
+test('append twice', function (t) {
+  var db = level()
+  var core = hypercore(db)
+  var feed = core.createFeed()
+  var indexed = null
+
+  var append = index({
+    feed: feed,
+    db: db
+  }, function (entry, cb) {
+    setTimeout(function () {
+      indexed = entry
+      cb()
+    }, 100)
+  })
+
+  append(new Buffer('hello'), function (err) {
+    t.error(err)
+    t.same(indexed, new Buffer('hello'), 'callback after index')
+  })
+
+  append(new Buffer('world'), function (err) {
+    t.error(err)
+    t.same(indexed, new Buffer('world'), 'callback after index')
+    t.end()
+  })
+})

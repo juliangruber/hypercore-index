@@ -7,6 +7,8 @@ var noop = function () {}
 module.exports = function (opts, onentry, ondone) {
   var feed = opts.feed
   var db = opts.db
+  var pending = []
+  var offset = 0
   ondone = ondone || noop
 
   if (typeof opts.start !== 'undefined') {
@@ -19,8 +21,20 @@ module.exports = function (opts, onentry, ondone) {
     })
   }
 
+  return append
+
+  function append (data, cb) {
+    if (!cb) cb = noop
+    feed.append(data, function (err) {
+      if (err) return cb(err)
+      if (offset >= feed.blocks) return cb(null)
+      pending.push({offset: feed.blocks, callback: cb})
+    })
+  }
+
   function onstart (start) {
-    var offset = start
+    offset = start
+
     var rs = feed.createReadStream({
       start: start,
       end: opts.end,
@@ -31,7 +45,11 @@ module.exports = function (opts, onentry, ondone) {
     each(rs, function (buf, done) {
       onentry(buf, function (err) {
         if (err) return done(err)
-        db.put('_seq', ++offset, done)
+        ++offset
+        while (pending.length && offset >= pending[0].offset) {
+          pending.shift().callback(null)
+        }
+        db.put('_seq', offset, done)
       })
     }, ondone)
   }
