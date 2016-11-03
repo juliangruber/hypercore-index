@@ -39,7 +39,7 @@ $ npm install hypercore-index
 
 ## API
 
-### index(opts, onentry, [ondone])
+### var append = index(opts, onentry, [ondone])
 
 Options:
 
@@ -48,6 +48,9 @@ Options:
 - `start`: The first index. Default: `0`
 - `end`: The last index. Default: `Infinity`
 - `live`: Whether to keep scanning. Default: `true`, unless you pass `opts.end`
+
+If you are the feed owner you can use the `append(data, callback)` method returned to append
+data and and wait for it to be indexed
 
 ## license
 
