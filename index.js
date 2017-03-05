@@ -28,7 +28,8 @@ module.exports = function (opts, onentry, ondone) {
     feed.append(data, function (err) {
       if (err) return cb(err)
       if (offset >= feed.blocks) return cb(null)
-      pending.push({offset: feed.blocks, callback: cb})
+      offset = feed.blocks || feed.length // hypercore V4/V5
+      pending.push({offset: offset, callback: cb})
     })
   }
 

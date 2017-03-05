@@ -2,6 +2,7 @@
 
 var hypercore = require('hypercore')
 var level = require('memdb')
+var ram = require('random-access-memory')
 var fs = require('fs')
 var index = require('./')
 var test = require('tap').test
@@ -10,8 +11,7 @@ test('index', function (t) {
   t.plan(3)
 
   var db = level()
-  var core = hypercore(db)
-  var feed = core.createFeed()
+  var feed = hypercore(ram)
 
   fs.createReadStream(__filename)
   .pipe(feed.createWriteStream())
@@ -42,8 +42,7 @@ test('live', function (t) {
   t.plan(2)
 
   var db = level()
-  var core = hypercore(db)
-  var feed = core.createFeed()
+  var feed = hypercore(ram)
 
   index({
     feed: feed,
@@ -62,8 +61,7 @@ test('live', function (t) {
 
 test('start', function (t) {
   var db = level()
-  var core = hypercore(db)
-  var feed = core.createFeed()
+  var feed = hypercore(ram)
 
   feed.append('foo', function (err) {
     t.error(err)
@@ -90,8 +88,7 @@ test('end', function (t) {
   t.plan(4)
 
   var db = level()
-  var core = hypercore(db)
-  var feed = core.createFeed()
+  var feed = hypercore(ram)
 
   feed.append('foo', function (err) {
     t.error(err)
@@ -114,15 +111,17 @@ test('end', function (t) {
 })
 
 test('append', function (t) {
+  t.plan(3)
+
   var db = level()
-  var core = hypercore(db)
-  var feed = core.createFeed()
+  var feed = hypercore(ram)
   var indexed = null
 
   var append = index({
     feed: feed,
     db: db
   }, function (entry, cb) {
+    t.ok(entry)
     setTimeout(function () {
       indexed = entry
       cb()
@@ -132,14 +131,12 @@ test('append', function (t) {
   append(new Buffer('hello'), function (err) {
     t.error(err)
     t.same(indexed, new Buffer('hello'), 'callback after index')
-    t.end()
   })
 })
 
 test('append twice', function (t) {
   var db = level()
-  var core = hypercore(db)
-  var feed = core.createFeed()
+  var feed = hypercore(ram)
   var indexed = null
 
   var append = index({
