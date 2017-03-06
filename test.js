@@ -17,9 +17,9 @@ test('index', function (t) {
     .pipe(feed.createWriteStream())
     .on('finish', function () {
       index(
+        storage,
         {
           feed: feed,
-          storage: storage,
           live: false
         },
         function (entry, cb) {
@@ -29,9 +29,9 @@ test('index', function (t) {
         function (err) {
           t.error(err)
           index(
+            storage,
             {
               feed: feed,
-              storage: storage,
               live: false
             },
             function (entry, cb) {
@@ -53,9 +53,9 @@ test('live', function (t) {
   var feed = hypercore(ram)
 
   index(
+    storage,
     {
-      feed: feed,
-      storage: storage
+      feed: feed
     },
     function (entry, cb) {
       t.ok(entry)
@@ -81,9 +81,9 @@ test('start', function (t) {
       t.error(err)
 
       index(
+        storage,
         {
           feed: feed,
-          storage: storage,
           live: false,
           start: 1
         },
@@ -112,9 +112,9 @@ test('end', function (t) {
       t.error(err)
 
       index(
+        storage,
         {
           feed: feed,
-          storage: storage,
           live: false,
           end: 1
         },
@@ -138,9 +138,9 @@ test('append', function (t) {
   var indexed = null
 
   var append = index(
+    storage,
     {
-      feed: feed,
-      storage: storage
+      feed: feed
     },
     function (entry, cb) {
       t.ok(entry)
@@ -166,9 +166,9 @@ test('append twice', function (t) {
   var indexed = null
 
   var append = index(
+    storage,
     {
-      feed: feed,
-      storage: storage
+      feed: feed
     },
     function (entry, cb) {
       setTimeout(

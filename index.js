@@ -5,9 +5,9 @@ var rafify = require('rafify')
 
 var noop = function () {}
 
-module.exports = function (opts, onentry, ondone) {
+module.exports = function (storage, opts, onentry, ondone) {
+  storage = rafify(storage)
   var feed = opts.feed
-  var storage = rafify(opts.storage)
   var pending = []
   var offset = 0
   ondone = ondone || noop
