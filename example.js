@@ -1,13 +1,11 @@
 'use strict'
 
 var hypercore = require('hypercore')
-var level = require('memdb')
+var ram = require('random-access-memory')
 var fs = require('fs')
 var index = require('./')
 
-var db = level('/tmp/hypercore-index')
-var core = hypercore(db)
-var feed = core.createFeed()
+var feed = hypercore(ram)
 
 fs
   .createReadStream(__filename)
@@ -19,9 +17,9 @@ fs
 var test = function (next) {
   console.log('INDEX')
   index(
+    ram(),
     {
       feed: feed,
-      db: db,
       live: false
     },
     function (entry, cb) {
