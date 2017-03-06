@@ -29,7 +29,7 @@ module.exports = function (opts, onentry, ondone) {
       if (err) return cb(err)
       if (offset >= feed.blocks) return cb(null)
       offset = feed.blocks || feed.length // hypercore V4/V5
-      pending.push({offset: offset, callback: cb})
+      pending.push({ offset: offset, callback: cb })
     })
   }
 
@@ -43,15 +43,19 @@ module.exports = function (opts, onentry, ondone) {
         ? opts.live
         : typeof end === 'undefined'
     })
-    each(rs, function (buf, done) {
-      onentry(buf, function (err) {
-        if (err) return done(err)
-        ++offset
-        while (pending.length && offset >= pending[0].offset) {
-          pending.shift().callback(null)
-        }
-        db.put('_seq', offset, done)
-      })
-    }, ondone)
+    each(
+      rs,
+      function (buf, done) {
+        onentry(buf, function (err) {
+          if (err) return done(err)
+          ++offset
+          while (pending.length && offset >= pending[0].offset) {
+            pending.shift().callback(null)
+          }
+          db.put('_seq', offset, done)
+        })
+      },
+      ondone
+    )
   }
 }

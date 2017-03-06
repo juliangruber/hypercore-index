@@ -13,29 +13,38 @@ test('index', function (t) {
   var db = level()
   var feed = hypercore(ram)
 
-  fs.createReadStream(__filename)
-  .pipe(feed.createWriteStream())
-  .on('finish', function () {
-    index({
-      feed: feed,
-      db: db,
-      live: false
-    }, function (entry, cb) {
-      t.ok(entry)
-      cb()
-    }, function (err) {
-      t.error(err)
-      index({
-        feed: feed,
-        db: db,
-        live: false
-      }, function (entry, cb) {
-        t.fail('Did not resume')
-      }, function (err) {
-        t.error(err)
-      })
+  fs
+    .createReadStream(__filename)
+    .pipe(feed.createWriteStream())
+    .on('finish', function () {
+      index(
+        {
+          feed: feed,
+          db: db,
+          live: false
+        },
+        function (entry, cb) {
+          t.ok(entry)
+          cb()
+        },
+        function (err) {
+          t.error(err)
+          index(
+            {
+              feed: feed,
+              db: db,
+              live: false
+            },
+            function (entry, cb) {
+              t.fail('Did not resume')
+            },
+            function (err) {
+              t.error(err)
+            }
+          )
+        }
+      )
     })
-  })
 })
 
 test('live', function (t) {
@@ -44,16 +53,20 @@ test('live', function (t) {
   var db = level()
   var feed = hypercore(ram)
 
-  index({
-    feed: feed,
-    db: db
-  }, function (entry, cb) {
-    t.ok(entry)
-    cb()
-  }, function (err) {
-    t.error(err)
-    t.fail()
-  })
+  index(
+    {
+      feed: feed,
+      db: db
+    },
+    function (entry, cb) {
+      t.ok(entry)
+      cb()
+    },
+    function (err) {
+      t.error(err)
+      t.fail()
+    }
+  )
 
   feed.append('foo')
   feed.append('bar')
@@ -68,18 +81,22 @@ test('start', function (t) {
     feed.append('bar', function (err) {
       t.error(err)
 
-      index({
-        feed: feed,
-        db: db,
-        live: false,
-        start: 1
-      }, function (entry, cb) {
-        t.equal(entry.toString(), 'bar')
-        cb()
-      }, function (err) {
-        t.error(err)
-        t.end()
-      })
+      index(
+        {
+          feed: feed,
+          db: db,
+          live: false,
+          start: 1
+        },
+        function (entry, cb) {
+          t.equal(entry.toString(), 'bar')
+          cb()
+        },
+        function (err) {
+          t.error(err)
+          t.end()
+        }
+      )
     })
   })
 })
@@ -95,17 +112,21 @@ test('end', function (t) {
     feed.append('bar', function (err) {
       t.error(err)
 
-      index({
-        feed: feed,
-        db: db,
-        live: false,
-        end: 1
-      }, function (entry, cb) {
-        t.equal(entry.toString(), 'foo')
-        cb()
-      }, function (err) {
-        t.error(err)
-      })
+      index(
+        {
+          feed: feed,
+          db: db,
+          live: false,
+          end: 1
+        },
+        function (entry, cb) {
+          t.equal(entry.toString(), 'foo')
+          cb()
+        },
+        function (err) {
+          t.error(err)
+        }
+      )
     })
   })
 })
@@ -117,16 +138,22 @@ test('append', function (t) {
   var feed = hypercore(ram)
   var indexed = null
 
-  var append = index({
-    feed: feed,
-    db: db
-  }, function (entry, cb) {
-    t.ok(entry)
-    setTimeout(function () {
-      indexed = entry
-      cb()
-    }, 100)
-  })
+  var append = index(
+    {
+      feed: feed,
+      db: db
+    },
+    function (entry, cb) {
+      t.ok(entry)
+      setTimeout(
+        function () {
+          indexed = entry
+          cb()
+        },
+        100
+      )
+    }
+  )
 
   append(new Buffer('hello'), function (err) {
     t.error(err)
@@ -139,15 +166,21 @@ test('append twice', function (t) {
   var feed = hypercore(ram)
   var indexed = null
 
-  var append = index({
-    feed: feed,
-    db: db
-  }, function (entry, cb) {
-    setTimeout(function () {
-      indexed = entry
-      cb()
-    }, 100)
-  })
+  var append = index(
+    {
+      feed: feed,
+      db: db
+    },
+    function (entry, cb) {
+      setTimeout(
+        function () {
+          indexed = entry
+          cb()
+        },
+        100
+      )
+    }
+  )
 
   append(new Buffer('hello'), function (err) {
     t.error(err)
