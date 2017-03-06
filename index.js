@@ -1,12 +1,13 @@
 'use strict'
 
 var each = require('stream-each')
+var rafify = require('rafify')
 
 var noop = function () {}
 
 module.exports = function (opts, onentry, ondone) {
   var feed = opts.feed
-  var db = opts.db
+  var storage = rafify(opts.storage)
   var pending = []
   var offset = 0
   ondone = ondone || noop
@@ -14,10 +15,13 @@ module.exports = function (opts, onentry, ondone) {
   if (typeof opts.start !== 'undefined') {
     onstart(opts.start)
   } else {
-    db.get('_seq', function (err, value) {
-      if (err && !err.notFound) return ondone(err)
-      if (err && err.notFound) return onstart(0)
-      onstart(Number(value))
+    storage.open(function (err) {
+      if (err) return ondone(err)
+
+      storage.read(0, storage.length, function (err, buf) {
+        if (err) return ondone(err)
+        onstart(Number(buf.toString()))
+      })
     })
   }
 
@@ -52,7 +56,7 @@ module.exports = function (opts, onentry, ondone) {
           while (pending.length && offset >= pending[0].offset) {
             pending.shift().callback(null)
           }
-          db.put('_seq', offset, done)
+          storage.write(0, Buffer(String(offset)), done)
         })
       },
       ondone

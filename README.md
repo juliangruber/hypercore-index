@@ -13,15 +13,15 @@ feed's db and continues there on later runs.
 ## Example
 
 ```js
+const ram = require('random-access-memory')
 const hypercore = require('hypercore')
 const index = require('hypercore-index')
 
-const core = hypercore(db)
-const feed = core.createFeed()
+const feed = hypercore(ram)
 
 index({
   feed: feed,
-  db: db
+  storage: ram()
 }, function onentry (entry, next) {
   console.log('entry', entry.toString())
   next()
@@ -44,7 +44,7 @@ $ npm install hypercore-index
 Options:
 
 - `feed`: The hypercore feed. Required.
-- `db`: A level db. Required.
+- `storage`: An [abstract-random-access](https://github.com/juliangruber/abstract-random-access) compliant storage or file path. Required.
 - `start`: The first index. Default: `0`
 - `end`: The last index. Default: `Infinity`
 - `live`: Whether to keep scanning. Default: `true`, unless you pass `opts.end`
@@ -52,6 +52,6 @@ Options:
 If you are the feed owner you can use the `append(data, callback)` method returned to append
 data and and wait for it to be indexed
 
-## license
+## License
 
 MIT
