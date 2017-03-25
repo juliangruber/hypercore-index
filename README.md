@@ -5,6 +5,7 @@ Linear asynchronous stateful indexing of a
 [hypercore](https://github.com/mafintosh/hypercore) feed.
 
 [![build status](https://travis-ci.org/juliangruber/hypercore-index.svg?branch=master)](http://travis-ci.org/juliangruber/hypercore-index)
+[![Greenkeeper badge](https://badges.greenkeeper.io/juliangruber/hypercore-index.svg)](https://greenkeeper.io/)
 
 Traverses a hypercore feed in chronologic order and lets you consume each
 entry via some asynchronous function. Remembers where you left inside the
