@@ -1,6 +1,8 @@
 
 # hypercore-index
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/juliangruber/hypercore-index.svg)](https://greenkeeper.io/)
+
 Linear asynchronous stateful indexing of a
 [hypercore](https://github.com/mafintosh/hypercore) feed.
 
