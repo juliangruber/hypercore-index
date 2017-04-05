@@ -8,7 +8,7 @@
     "hypercore": "^5.1.0",
     "prettier-standard-formatter": "^0.222222222222222.333333333333333",
     "random-access-memory": "^2.3.0",
-    "standard": "^9.0.2",
+    "standard": "^10.0.0",
     "tap": "^10.0.0"
   },
   "scripts": {
