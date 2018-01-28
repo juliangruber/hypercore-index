@@ -9,7 +9,7 @@
     "prettier-standard-formatter": "^0.222222222222222.333333333333333",
     "random-access-memory": "^2.3.0",
     "standard": "^10.0.0",
-    "tap": "^10.0.0"
+    "tap": "^11.0.0"
   },
   "scripts": {
     "test": "prettier-standard-formatter *.js && tap test.js"
